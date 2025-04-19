@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyy.mapper.VideoMapper">
+    <!-- 批量插入标签 -->
+    <insert id="addTags">
+        INSERT INTO video_tags (video_id, tag)
+        VALUES
+        <foreach collection="tags" item="tag" separator=",">
+            (#{videoId}, #{tag})
+        </foreach>
+    </insert>
+    <!--更新视频-->
+    <update id="update" >
+        UPDATE videos
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="coverImg != null">coverImg = #{coverImg},</if>
+            <if test="videoUrl != null">video_url = #{videoUrl},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            updated_at = NOW() <!-- 强制更新时间 -->
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <!-- 分页查询视频 -->
+    <select id="listVideos" resultType="com.lyy.pojo.Video">
+        SELECT * FROM videos
+        <where>
+            <if test="category != null and category != ''">
+                category = #{category}
+            </if>
+            <if test="uploaderId != null">
+                AND uploader_id = #{uploaderId}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+        <if test="sort != null and sort != ''">
+            ORDER BY ${sort}
+        </if>
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <select id="countVideos" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM videos
+        <where>
+            <if test="category != null and category != ''">
+                category = #{category}
+            </if>
+            <if test="uploaderId != null">
+                AND uploader_id = #{uploaderId}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!-- 批量查询标签 -->
+    <select id="batchGetTags" resultType="map">
+        SELECT video_id AS videoId, tag
+        FROM video_tags
+        WHERE video_id IN
+        <foreach collection="videoId" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!-- 搜索视频列表 -->
+    <select id="searchVideos" resultType="com.lyy.pojo.Video">
+        SELECT * FROM videos
+        WHERE
+            title LIKE CONCAT('%', #{keyword}, '%')
+
+        ORDER BY created_at DESC
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <!-- 统计搜索结果总数 -->
+    <select id="countSearchVideos" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM videos
+        WHERE
+            title LIKE CONCAT('%', #{keyword}, '%')
+           OR description LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+</mapper>

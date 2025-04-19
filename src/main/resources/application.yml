@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/video_platform
+    username: root
+    password: aaa123456
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  servlet:
+    multipart:
+      # 设置单个文件最大为 5GB
+      # 设置请求总大小（多文件上传时限制）为 5GB
+      max-file-size: 5GB
+      max-request-size: 5GB
+      # 设置明确的临时目录（确保有读写权限）
+      location: /data/tmp/upload
+
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true # 开启驼峰命名和下划线命名的自动转化
+
+
+
+
+
+
+
+
+
+
+
+
+

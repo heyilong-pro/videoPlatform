@@ -1,0 +1,14 @@
+# 默认忽略的文件
+/shelf/
+/workspace.xml
+# 基于编辑器的 HTTP 客户端请求
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+# 在 .gitignore 中添加
+src/main/resources/git initapplication.yml
+
+# 忽略阿里云配置文件
+src/main/resources/aliyun.properties

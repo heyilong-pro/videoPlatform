@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyy.mapper.CommentMapper">
+
+    <!-- 查询评论列表 -->
+    <select id="selectCommentsByCondition" resultType="com.lyy.pojo.Comment">
+        SELECT *
+        FROM video_comments
+        <where>
+            <if test="videoId != null">
+                video_id = #{videoId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+        </where>
+        ORDER BY created_at
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <!-- 统计评论总数 -->
+    <select id="countCommentsByCondition" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM video_comments
+        <where>
+            <if test="videoId != null">
+                video_id = #{videoId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+        </where>
+    </select>
+</mapper>
